@@ -1,0 +1,1197 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Azúcar Dance Studio — Escuela de Baile en CDMX</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* ===== RESET & VARS ===== */
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+:root {
+  --red: #CC2822;
+  --red-dark: #A8201B;
+  --blue: #1B3A8C;
+  --blue-light: #2850C8;
+  --white: #FFFFFF;
+  --bg: #FFFFFF;
+  --bg-alt: #F4F5F7;
+  --card: #FFFFFF;
+  --border: #E0E0E8;
+  --text: #111111;
+  --text-light: #444444;
+  --muted: #888888;
+  --font-display: 'Bebas Neue', sans-serif;
+  --font-body: 'Inter', sans-serif;
+}
+html { scroll-behavior: smooth; }
+body { background: var(--bg); color: var(--text); font-family: var(--font-body); overflow-x: hidden; cursor: none; }
+a { color: inherit; text-decoration: none; }
+
+/* ===== LOADER ===== */
+#loader { position: fixed; inset: 0; z-index: 9999; background: var(--bg); display: flex; flex-direction: column; align-items: center; justify-content: center; transition: opacity 0.8s ease, visibility 0.8s ease; }
+#loader.hidden { opacity: 0; visibility: hidden; pointer-events: none; }
+.loader-logo-wrap { display: flex; align-items: center; gap: 1rem; }
+.loader-svg { width: 60px; height: 60px; animation: logoReveal 1.2s ease forwards; opacity: 0; }
+.loader-text { font-family: var(--font-display); font-size: clamp(2.5rem, 8vw, 4.5rem); letter-spacing: 0.15em; color: var(--blue); animation: logoReveal 1.2s 0.1s ease forwards; opacity: 0; }
+.loader-text span { color: var(--red); }
+@keyframes logoReveal { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+.loader-bar-wrap { width: 200px; height: 2px; background: var(--border); margin-top: 2rem; overflow: hidden; }
+.loader-bar { height: 100%; width: 0; background: linear-gradient(90deg, var(--blue), var(--red)); animation: loadBar 2s ease forwards; }
+@keyframes loadBar { to { width: 100%; } }
+
+/* ===== CURSOR ===== */
+#cursor-dot { width: 8px; height: 8px; background: var(--red); border-radius: 50%; position: fixed; pointer-events: none; z-index: 9998; transform: translate(-50%,-50%); }
+#cursor-ring { width: 32px; height: 32px; border: 1.5px solid var(--blue); border-radius: 50%; position: fixed; pointer-events: none; z-index: 9997; transform: translate(-50%,-50%); transition: all 0.15s ease; opacity: 0.7; }
+
+/* ===== SCROLL PROGRESS ===== */
+#scroll-bar { position: fixed; top: 0; left: 0; height: 3px; background: linear-gradient(90deg, var(--blue), var(--red)); z-index: 9000; width: 0%; transition: width 0.1s linear; }
+
+/* ===== GRAIN ===== */
+#grain { position: fixed; inset: 0; z-index: 9500; pointer-events: none; opacity: 0.025;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+  background-size: 256px; }
+
+/* ===== NAV ===== */
+nav { position: fixed; top: 0; left: 0; right: 0; z-index: 800; padding: 0.75rem 2rem; display: flex; align-items: center; justify-content: space-between; background: rgba(255,255,255,0.97); border-bottom: 2px solid var(--red); backdrop-filter: blur(8px); overflow: hidden; }
+nav::before { content:''; position:absolute; top:0; left:-120%; width:60%; height:100%; background:linear-gradient(90deg,transparent,rgba(27,58,140,0.07) 40%,rgba(204,40,34,0.07) 60%,transparent); animation:navSweep 5s ease-in-out infinite; pointer-events:none; }
+@keyframes navSweep { 0%{left:-120%} 100%{left:220%} }
+.nav-logo { display: flex; align-items: center; gap: 0.75rem; }
+.nav-logo-svg { width: 44px; height: 44px; flex-shrink: 0; animation: logoSpin 12s linear infinite; filter: drop-shadow(0 0 6px rgba(204,40,34,0)); transition: filter 0.3s; }
+.nav-logo:hover .nav-logo-svg { filter: drop-shadow(0 0 10px rgba(204,40,34,0.5)); animation-play-state: paused; }
+@keyframes logoSpin { 0%,85%{transform:rotateY(0deg)} 90%{transform:rotateY(180deg)} 95%,100%{transform:rotateY(360deg)} }
+.nav-logo-text { display: flex; flex-direction: column; line-height: 1; }
+.nav-logo-name { font-family: var(--font-display); font-size: 1.35rem; letter-spacing: 0.1em; color: var(--red); animation: nameGlow 4s ease-in-out infinite; }
+@keyframes nameGlow { 0%,100%{text-shadow:none} 50%{text-shadow:0 0 16px rgba(204,40,34,0.45)} }
+.nav-logo-sub { font-size: 0.6rem; font-weight: 700; letter-spacing: 0.35em; text-transform: uppercase; color: var(--blue); margin-top: 1px; }
+.nav-links { display: flex; gap: 1.8rem; list-style: none; }
+.nav-links a { font-size: 0.72rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-light); transition: color 0.2s; position: relative; display: inline-block; }
+.nav-links a::after { content:''; position:absolute; bottom:-3px; left:0; width:100%; height:1.5px; background:linear-gradient(90deg,var(--blue),var(--red)); transform:scaleX(0); transform-origin:left; transition:transform 0.35s cubic-bezier(0.22,1,0.36,1); }
+.nav-links a:hover { color: var(--red); }
+.nav-links a:hover::after { transform:scaleX(1); }
+.nav-cta { background: var(--red); color: white; padding: 0.6rem 1.4rem; font-size: 0.72rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; border: none; cursor: pointer; position:relative; overflow:hidden; transition: background 0.2s, box-shadow 0.2s; }
+.nav-cta::before { content:''; position:absolute; inset:0; background:linear-gradient(135deg,rgba(255,255,255,0.2),transparent); transform:translateX(-100%); transition: transform 0.4s ease; }
+.nav-cta:hover { background: var(--red-dark); box-shadow:0 0 18px rgba(204,40,34,0.5); }
+.nav-cta:hover::before { transform:translateX(100%); }
+.hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer; background: none; border: none; padding: 4px; }
+.hamburger span { width: 24px; height: 2px; background: var(--blue); display: block; transition: all 0.3s; }
+.hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+.hamburger.open span:nth-child(2) { opacity:0; transform:scaleX(0); }
+.hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+.mobile-menu { display: none; position: fixed; top: 69px; left: 0; right: 0; background: white; padding: 1.5rem 2rem; flex-direction: column; gap: 0; border-bottom: 2px solid var(--red); z-index: 799; }
+.mobile-menu.open { display: flex; }
+.mobile-menu a { font-size: 1rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-light); padding: 0.8rem 0; border-bottom: 1px solid var(--border); opacity:0; transform:translateX(-20px); transition: color 0.2s; }
+.mobile-menu.open a { animation: menuItemIn 0.35s ease forwards; }
+.mobile-menu.open a:nth-child(1){animation-delay:0.02s}
+.mobile-menu.open a:nth-child(2){animation-delay:0.06s}
+.mobile-menu.open a:nth-child(3){animation-delay:0.10s}
+.mobile-menu.open a:nth-child(4){animation-delay:0.14s}
+.mobile-menu.open a:nth-child(5){animation-delay:0.18s}
+.mobile-menu.open a:nth-child(6){animation-delay:0.22s}
+.mobile-menu.open a:nth-child(7){animation-delay:0.26s}
+.mobile-menu.open a:nth-child(8){animation-delay:0.30s}
+@keyframes menuItemIn { to{opacity:1;transform:none} }
+.mobile-menu a:hover { color: var(--red); }
+
+/* ===== HERO ===== */
+#hero { position: relative; min-height: 100vh; display: flex; align-items: center; justify-content: center; z-index: 1; overflow: hidden; }
+#hero-video-wrap { position: absolute; inset: 0; z-index: 0; overflow: hidden; transform-origin: center center; transition: transform 0.1s ease-out; }
+#hero-video-wrap.burst { animation: videoBurst 1.6s cubic-bezier(0.22,1,0.36,1) forwards; }
+@keyframes videoBurst {
+  0%   { transform: perspective(1200px) rotateX(28deg) rotateY(-6deg) scale(0.68); filter: brightness(0.15) blur(14px); }
+  45%  { transform: perspective(1200px) rotateX(-5deg) rotateY(2deg) scale(1.06); filter: brightness(1.15) blur(0); }
+  70%  { transform: perspective(1200px) rotateX(2deg) rotateY(-1deg) scale(1.02); }
+  100% { transform: perspective(1200px) rotateX(0) rotateY(0) scale(1); filter: none; }
+}
+#hero-iframe { position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%) scale(1.15); width: 100vw; height: 56.25vw; min-height: 100vh; min-width: 177.78vh; border: none; pointer-events: none; }
+#hero-video-overlay { position: absolute; inset: 0; z-index: 1; background: linear-gradient(to bottom, rgba(10,10,30,0.65) 0%, rgba(10,10,30,0.45) 50%, rgba(10,10,30,0.72) 100%); }
+#hero-scanlines { position: absolute; inset: 0; z-index: 2; pointer-events: none; background: repeating-linear-gradient(0deg, transparent 0px, transparent 3px, rgba(0,0,0,0.07) 3px, rgba(0,0,0,0.07) 4px); animation: scanMove 6s linear infinite; opacity:0.6; }
+@keyframes scanMove { from{background-position:0 0} to{background-position:0 200px} }
+/* HUD corner brackets */
+.hud-corner { position:absolute; width:46px; height:46px; z-index:4; pointer-events:none; }
+.hud-corner::before,.hud-corner::after { content:''; position:absolute; background:var(--red); box-shadow:0 0 8px rgba(204,40,34,0.7); }
+.hud-corner::before { width:2px; height:100%; top:0; left:0; }
+.hud-corner::after  { width:100%; height:2px; top:0; left:0; }
+.hud-tl { top:24px; left:24px; animation: hudFadeIn 0.6s 2.8s ease both; }
+.hud-tr { top:24px; right:24px; transform:scaleX(-1); animation: hudFadeIn 0.6s 2.9s ease both; }
+.hud-bl { bottom:24px; left:24px; transform:scaleY(-1); animation: hudFadeIn 0.6s 3.0s ease both; }
+.hud-br { bottom:24px; right:24px; transform:scale(-1,-1); animation: hudFadeIn 0.6s 3.1s ease both; }
+@keyframes hudFadeIn { from{opacity:0;transform:scale(0.5)} to{opacity:1;transform:scale(1)} }
+.hud-tr { transform-origin:right top; }
+.hud-bl { transform-origin:left bottom; }
+.hud-br { transform-origin:right bottom; }
+/* glitch data readout */
+.hero-hud-data { position:absolute; bottom:80px; right:28px; z-index:4; font-size:0.55rem; letter-spacing:0.2em; color:rgba(204,40,34,0.7); font-family:monospace; line-height:1.8; pointer-events:none; text-align:right; animation:hudFadeIn 0.5s 3.5s ease both; opacity:0; }
+.hero-hud-data-left { left:28px; right:auto; text-align:left; color:rgba(27,58,140,0.7); animation-delay:3.6s; }
+.hero-content { text-align: center; position: relative; z-index: 2; padding: 0 2rem; }
+.hero-eyebrow { font-size: 0.7rem; letter-spacing: 0.45em; text-transform: uppercase; color: rgba(255,255,255,0.75); margin-bottom: 1.2rem; opacity: 0; animation: fadeUp 0.8s 2.5s ease forwards; }
+.hero-title { font-family: var(--font-display); font-size: clamp(5rem, 18vw, 14rem); line-height: 0.85; letter-spacing: 0.05em; display: flex; justify-content: center; flex-wrap: wrap; }
+.hero-title .letter { display: inline-block; opacity: 0; transform: translateY(80px) rotate(6deg); transition: opacity 0.55s ease, transform 0.55s ease; color: #ffffff; }
+.hero-title .letter.active { opacity: 1; transform: none; }
+.hero-accent { color: var(--red) !important; }
+.hero-sub { font-family: var(--font-display); font-size: clamp(1.2rem, 4vw, 2.8rem); letter-spacing: 0.7em; color: rgba(255,255,255,0.85); margin-top: 0.6rem; opacity: 0; animation: fadeUp 0.8s 3.2s ease forwards; }
+.hero-tagline { font-size: clamp(0.85rem, 1.8vw, 1rem); color: rgba(255,255,255,0.7); max-width: 500px; margin: 1.8rem auto 0; line-height: 1.8; opacity: 0; animation: fadeUp 0.8s 3.5s ease forwards; }
+.hero-ctas { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; margin-top: 2.5rem; opacity: 0; animation: fadeUp 0.8s 3.8s ease forwards; }
+.hero-scroll { position: absolute; bottom: 2rem; left: 50%; transform: translateX(-50%); display: flex; flex-direction: column; align-items: center; gap: 0.5rem; opacity: 0; animation: fadeUp 0.8s 4.2s ease forwards; }
+.scroll-line { width: 1px; height: 40px; background: linear-gradient(to bottom, white, transparent); animation: scrollPulse 2s infinite; }
+.scroll-text { font-size: 0.58rem; letter-spacing: 0.3em; color: rgba(255,255,255,0.6); text-transform: uppercase; }
+@keyframes scrollPulse { 0%,100%{opacity:0.3} 50%{opacity:1} }
+@keyframes fadeUp { from{opacity:0;transform:translateY(20px)} to{opacity:1;transform:none} }
+
+/* ===== BUTTONS ===== */
+.btn-primary { background: var(--red); color: white; padding: 0.9rem 2.2rem; border-radius: 0; font-weight: 700; font-size: 0.78rem; letter-spacing: 0.15em; text-transform: uppercase; border: none; cursor: pointer; transition: all 0.2s; display: inline-block; }
+.btn-primary:hover { background: var(--red-dark); transform: translateY(-2px); box-shadow: 0 6px 20px rgba(204,40,34,0.3); }
+.btn-outline { border: 2px solid var(--blue); color: var(--blue); padding: 0.9rem 2.2rem; border-radius: 0; font-weight: 700; font-size: 0.78rem; letter-spacing: 0.15em; text-transform: uppercase; cursor: pointer; transition: all 0.2s; display: inline-block; background: transparent; }
+.btn-outline:hover { background: var(--blue); color: white; transform: translateY(-2px); }
+.btn-outline-white { border: 2px solid rgba(255,255,255,0.7); color: white; padding: 0.9rem 2.2rem; border-radius: 0; font-weight: 700; font-size: 0.78rem; letter-spacing: 0.15em; text-transform: uppercase; cursor: pointer; transition: all 0.2s; display: inline-block; background: transparent; }
+.btn-outline-white:hover { background: white; color: var(--blue); }
+
+/* ===== SECTIONS ===== */
+section { position: relative; z-index: 1; }
+.section-inner { max-width: 1200px; margin: 0 auto; padding: 0 2rem; }
+.section-header { text-align: center; margin-bottom: 3.5rem; }
+.section-badge { display: inline-block; font-size: 0.62rem; letter-spacing: 0.4em; text-transform: uppercase; color: var(--blue); border: 1.5px solid var(--blue); padding: 0.35rem 1rem; border-radius: 0; margin-bottom: 1rem; font-weight: 600; }
+.section-badge.red { color: var(--red); border-color: var(--red); }
+.section-title { font-family: var(--font-display); font-size: clamp(2.2rem, 6vw, 4.5rem); line-height: 0.9; letter-spacing: 0.04em; color: var(--text); }
+.section-title .accent { color: var(--red); }
+.section-title .accent-blue { color: var(--blue); }
+.section-sub { color: var(--muted); font-size: 0.95rem; max-width: 500px; margin: 1rem auto 0; line-height: 1.7; }
+.red-divider { width: 48px; height: 3px; background: var(--red); margin: 1.2rem auto 0; }
+.blue-divider { width: 48px; height: 3px; background: var(--blue); margin: 1.2rem auto 0; }
+
+/* ===== REVEAL ===== */
+.reveal { opacity: 0; transform: translateY(32px); transition: opacity 0.7s ease, transform 0.7s ease; }
+.reveal-left { opacity: 0; transform: translateX(-32px); transition: opacity 0.7s ease, transform 0.7s ease; }
+.reveal-right { opacity: 0; transform: translateX(32px); transition: opacity 0.7s ease, transform 0.7s ease; }
+.reveal.active,.reveal-left.active,.reveal-right.active { opacity:1;transform:none; }
+
+/* ===== DISCIPLINES ===== */
+#disciplinas { padding: 6rem 0; background: var(--bg); }
+.disc-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 1px; background: var(--border); border: 1px solid var(--border); }
+.disc-card { background: white; padding: 2rem 1.2rem; text-align: center; transition: all 0.25s; position: relative; overflow: hidden; }
+.disc-card::after { content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 3px; background: var(--red); transform: scaleX(0); transform-origin: left; transition: transform 0.25s; }
+.disc-card:hover { background: var(--blue); }
+.disc-card:hover::after { transform: scaleX(1); }
+.disc-card:hover .disc-name { color: white; }
+.disc-card:hover .disc-desc { color: rgba(255,255,255,0.75); }
+.disc-icon { font-size: 2rem; margin-bottom: 0.8rem; }
+.disc-name { font-family: var(--font-display); font-size: 1.15rem; letter-spacing: 0.08em; color: var(--blue); transition: color 0.25s; }
+.disc-desc { font-size: 0.72rem; color: var(--muted); margin-top: 0.35rem; line-height: 1.5; transition: color 0.25s; }
+
+/* ===== CURSOS ===== */
+#cursos { padding: 6rem 0; background: var(--bg-alt); }
+.tabs { display: flex; gap: 0; flex-wrap: wrap; margin-bottom: 2rem; border: 1.5px solid var(--border); width: fit-content; }
+.tab-btn { background: transparent; border: none; border-right: 1px solid var(--border); color: var(--muted); padding: 0.65rem 1.4rem; font-size: 0.72rem; letter-spacing: 0.1em; text-transform: uppercase; cursor: pointer; font-family: var(--font-body); font-weight: 600; transition: all 0.2s; }
+.tab-btn:last-child { border-right: none; }
+.tab-btn { position:relative; overflow:hidden; }
+.tab-btn::before { content:''; position:absolute; inset:0; background:linear-gradient(90deg,transparent,rgba(255,255,255,0.25),transparent); transform:translateX(-100%); pointer-events:none; }
+.tab-btn:hover::before { animation:btnScan 0.45s ease; }
+@keyframes btnScan { to{transform:translateX(100%)} }
+.tab-btn:hover { color: var(--red); background: rgba(204,40,34,0.05); }
+.tab-btn.active { background: var(--red); color: white; border-color: var(--red); box-shadow:0 0 14px rgba(204,40,34,0.4), inset 0 0 8px rgba(204,40,34,0.2); }
+.curso-card { background: white; border: 1px solid var(--border); }
+.curso-header { padding: 2.5rem; background: var(--blue); }
+.curso-tag { font-size: 0.62rem; letter-spacing: 0.3em; text-transform: uppercase; color: rgba(255,255,255,0.7); margin-bottom: 0.5rem; }
+.curso-name { font-family: var(--font-display); font-size: clamp(2rem, 5vw, 3.5rem); letter-spacing: 0.05em; line-height: 1; color: white; }
+.curso-body { display: grid; grid-template-columns: 1fr 1fr; }
+.curso-info { padding: 2rem 2.5rem; border-right: 1px solid var(--border); }
+.curso-pricing { padding: 2rem 2.5rem; }
+.info-label { font-size: 0.6rem; letter-spacing: 0.25em; text-transform: uppercase; color: var(--muted); margin-bottom: 0.3rem; font-weight: 700; }
+.info-value { font-size: 0.9rem; color: var(--text-light); margin-bottom: 1.2rem; line-height: 1.6; }
+.price-item { display: flex; justify-content: space-between; align-items: center; padding: 0.75rem 0; border-bottom: 1px solid var(--border); }
+.price-item:last-child { border-bottom: none; }
+.price-label { font-size: 0.82rem; color: var(--muted); }
+.price-val { font-family: var(--font-display); font-size: 1.5rem; color: var(--red); letter-spacing: 0.03em; }
+.curso-cta { padding: 0 2.5rem 2.5rem; }
+
+/* ===== NOSOTROS ===== */
+#nosotros { padding: 6rem 0; background: var(--blue); }
+.nosotros-inner { max-width: 1200px; margin: 0 auto; padding: 0 2rem; display: grid; grid-template-columns: 1fr 1fr; gap: 5rem; align-items: center; }
+.nosotros-badge { display: inline-block; font-size: 0.62rem; letter-spacing: 0.4em; text-transform: uppercase; color: rgba(255,255,255,0.6); border: 1.5px solid rgba(255,255,255,0.25); padding: 0.35rem 1rem; margin-bottom: 1rem; font-weight: 600; }
+.nosotros-title { font-family: var(--font-display); font-size: clamp(2.2rem, 5vw, 4rem); line-height: 0.9; letter-spacing: 0.04em; color: white; }
+.nosotros-title span { color: #FFD700; }
+.nosotros-divider { width: 48px; height: 3px; background: var(--red); margin: 1.2rem 0; }
+.nosotros-text { font-size: 0.95rem; color: rgba(255,255,255,0.8); line-height: 1.85; }
+.nosotros-text p { margin-bottom: 1.2rem; }
+.nosotros-stats { display: grid; grid-template-columns: repeat(3,1fr); gap: 1px; background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.12); }
+.stat-item { background: rgba(255,255,255,0.06); padding: 1.8rem 1rem; text-align: center; }
+.stat-num { font-family: var(--font-display); font-size: 3rem; color: #FFD700; line-height: 1; letter-spacing: 0.02em; }
+.stat-label { font-size: 0.68rem; letter-spacing: 0.2em; text-transform: uppercase; color: rgba(255,255,255,0.65); margin-top: 0.4rem; font-weight: 600; }
+.nosotros-disciplines { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 2rem; }
+.discipline-tag { background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); color: rgba(255,255,255,0.85); font-size: 0.68rem; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; padding: 0.4rem 0.9rem; }
+@media (max-width: 768px) {
+  .nosotros-inner { grid-template-columns: 1fr; gap: 3rem; }
+}
+
+/* ===== CURSO SELECTOR (card style) ===== */
+.curso-selector { display: grid; grid-template-columns: repeat(5, 1fr); gap: 1px; background: var(--border); border: 1px solid var(--border); margin-bottom: 2rem; perspective: 1200px; }
+.csel-card { background: white; padding: 1.5rem 0.8rem; text-align: center; cursor: pointer; border: none; width: 100%; font-family: var(--font-body); position: relative; overflow: hidden; transition: background 0.25s, transform 0.25s, box-shadow 0.25s; transform-origin: center bottom; }
+.csel-card::after { content: ''; position: absolute; inset: 0; background: radial-gradient(circle at 50% 120%, rgba(27,58,140,0.18) 0%, transparent 70%); opacity: 0; transition: opacity 0.25s; pointer-events: none; }
+.csel-card:hover { background: var(--bg-alt); transform: translateY(-5px) perspective(600px) rotateX(6deg); box-shadow: 0 10px 28px rgba(27,58,140,0.13); z-index: 2; }
+.csel-card:hover::after { opacity: 1; }
+.csel-card.active { background: var(--blue); transform: translateY(-3px); box-shadow: 0 8px 24px rgba(27,58,140,0.28); z-index: 2; }
+.csel-card.active .csel-name { color: white; }
+.csel-card.active .csel-desc { color: rgba(255,255,255,0.75); }
+.csel-card.active .csel-icon { animation: iconBounce 0.5s cubic-bezier(0.36,0.07,0.19,0.97); }
+@keyframes iconBounce {
+  0%   { transform: scale(1) rotate(0deg); }
+  25%  { transform: scale(1.5) rotate(-10deg); }
+  50%  { transform: scale(0.9) rotate(6deg); }
+  75%  { transform: scale(1.15) rotate(-3deg); }
+  100% { transform: scale(1) rotate(0deg); }
+}
+.csel-icon { font-size: 2rem; margin-bottom: 0.7rem; display: block; transition: transform 0.25s; }
+.csel-name { font-family: var(--font-display); font-size: 1.05rem; letter-spacing: 0.07em; color: var(--blue); display: block; transition: color 0.25s; line-height: 1.2; }
+.csel-desc { font-size: 0.68rem; color: var(--muted); margin-top: 0.3rem; display: block; transition: color 0.25s; line-height: 1.4; }
+
+/* panel 3D entrance animation */
+@keyframes panel3dIn {
+  0%   { opacity: 0; transform: perspective(900px) rotateX(18deg) translateY(-24px) scale(0.94); }
+  55%  { opacity: 1; transform: perspective(900px) rotateX(-3deg) translateY(4px) scale(1.01); }
+  100% { opacity: 1; transform: perspective(900px) rotateX(0deg) translateY(0) scale(1); }
+}
+.tab-panel { display: none; }
+.tab-panel.active { display: block; animation: panel3dIn 0.5s cubic-bezier(0.22,1,0.36,1) forwards; }
+
+@media (max-width: 768px) {
+  .curso-selector { grid-template-columns: repeat(3,1fr); }
+}
+@media (max-width: 480px) {
+  .curso-selector { grid-template-columns: repeat(2,1fr); }
+}
+
+/* ===== PAYMENT BUTTONS ===== */
+.pay-grid { display: flex; gap: 0.75rem; flex-wrap: wrap; margin-top: 1rem; padding-top: 1rem; border-top: 1px solid var(--border); }
+.btn-stripe { display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.65rem 1.2rem; font-size: 0.72rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; border-radius: 0; transition: all 0.2s; cursor: pointer; }
+.btn-stripe-red { background: var(--red); color: white; border: 2px solid var(--red); }
+.btn-stripe-red:hover { background: var(--red-dark); border-color: var(--red-dark); }
+.btn-stripe-blue { background: transparent; color: var(--blue); border: 2px solid var(--blue); }
+.btn-stripe-blue:hover { background: var(--blue); color: white; }
+.btn-stripe-green { background: #059669; color: white; border: 2px solid #059669; }
+.btn-stripe-green:hover { background: #047857; border-color: #047857; }
+.pay-label { font-size: 0.6rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--muted); margin-bottom: 0.4rem; font-weight: 600; }
+
+/* ===== PARTICULARES ===== */
+#particulares { padding: 6rem 0; background: var(--bg); }
+.particulares-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 1px; background: var(--border); border: 1px solid var(--border); }
+.part-card { background: white; padding: 2rem; transition: all 0.25s; }
+.part-card:hover { background: var(--bg-alt); }
+.part-icon { font-size: 2rem; margin-bottom: 1rem; }
+.part-title { font-family: var(--font-display); font-size: 1.6rem; letter-spacing: 0.05em; margin-bottom: 0.5rem; color: var(--blue); }
+.part-desc { font-size: 0.82rem; color: var(--muted); line-height: 1.7; margin-bottom: 1.5rem; }
+.part-price { font-family: var(--font-display); font-size: 2rem; color: var(--red); }
+.part-price span { font-family: var(--font-body); font-size: 0.72rem; color: var(--muted); }
+
+/* ===== COREOGRAFÍAS ===== */
+#coreos { padding: 6rem 0; background: var(--bg-alt); }
+.coreo-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1.2rem; }
+.coreo-pkg { background: white; border: 1px solid var(--border); padding: 1.8rem; position: relative; transition: all 0.25s; }
+.coreo-pkg:hover { border-color: var(--red); box-shadow: 0 4px 24px rgba(204,40,34,0.1); }
+.coreo-pkg.featured { border: 2px solid var(--red); }
+.coreo-pkg.featured::before { content: '★ MÁS POPULAR'; position: absolute; top: -1px; right: 1.2rem; background: var(--red); color: white; font-size: 0.58rem; font-weight: 700; letter-spacing: 0.15em; padding: 0.3rem 0.8rem; }
+.pkg-name { font-family: var(--font-display); font-size: 1.6rem; letter-spacing: 0.05em; color: var(--blue); }
+.pkg-price { font-family: var(--font-display); font-size: 2.5rem; color: var(--red); margin: 0.4rem 0; }
+.pkg-price .currency { font-size: 1rem; color: var(--muted); font-family: var(--font-body); }
+.pkg-includes { list-style: none; margin: 1rem 0; }
+.pkg-includes li { font-size: 0.8rem; color: var(--text-light); padding: 0.35rem 0; border-bottom: 1px solid var(--border); display: flex; gap: 0.5rem; align-items: flex-start; }
+.pkg-includes li:last-child { border-bottom: none; }
+.pkg-includes li::before { content: '✓'; color: var(--red); font-weight: 700; flex-shrink: 0; }
+
+/* ===== HORARIOS ===== */
+#horarios { padding: 6rem 0; background: var(--bg); }
+.sede-tabs { display: flex; gap: 0; margin-bottom: 2rem; border: 1.5px solid var(--border); width: fit-content; }
+.sede-btn { background: transparent; color: var(--muted); padding: 0.7rem 2rem; border: none; border-right: 1px solid var(--border); cursor: pointer; font-family: var(--font-body); font-size: 0.75rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; transition: all 0.2s; }
+.sede-btn:last-child { border-right: none; }
+.sede-btn { position:relative; overflow:hidden; }
+.sede-btn::before { content:''; position:absolute; inset:0; background:linear-gradient(90deg,transparent,rgba(255,255,255,0.2),transparent); transform:translateX(-100%); pointer-events:none; }
+.sede-btn:hover::before { animation:btnScan 0.45s ease; }
+.sede-btn.active { background: var(--blue); color: white; box-shadow:0 0 16px rgba(27,58,140,0.45), inset 0 0 8px rgba(27,58,140,0.2); }
+.horario-panel { display: none; }
+.horario-panel.active { display: block; }
+.dia-tabs { display: flex; gap: 0.4rem; flex-wrap: wrap; margin-bottom: 1.5rem; }
+.dia-btn { background: white; border: 1.5px solid var(--border); color: var(--muted); padding: 0.4rem 1rem; font-size: 0.7rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; cursor: pointer; font-family: var(--font-body); transition: all 0.2s; border-radius: 0; }
+.dia-btn { position:relative; overflow:hidden; }
+.dia-btn::before { content:''; position:absolute; inset:0; background:linear-gradient(90deg,transparent,rgba(255,255,255,0.2),transparent); transform:translateX(-100%); pointer-events:none; }
+.dia-btn:hover::before { animation:btnScan 0.45s ease; }
+.dia-btn:hover { border-color: var(--blue); color: var(--blue); }
+.dia-btn.active { background: var(--blue); color: white; border-color: var(--blue); box-shadow:0 0 12px rgba(27,58,140,0.4); }
+.dia-panel { display: none; }
+.dia-panel.active { display: block; }
+.clase-card { display: flex; align-items: center; gap: 1rem; padding: 0.8rem 1rem; margin-bottom: 4px; border-left: 3px solid var(--blue); background: white; border-top: 1px solid var(--border); border-right: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+.clase-card.bpf { border-left-color: #0e8a7a; }
+.clase-card.casino { border-left-color: #d45a00; }
+.clase-card.bachata { border-left-color: #7c3aed; }
+.clase-card.salsa { border-left-color: var(--red); }
+.clase-card.aerea { border-left-color: #0369a1; }
+.clase-card.cumbia { border-left-color: #b45309; }
+.clase-card.other { border-left-color: var(--muted); }
+.clase-time { font-family: var(--font-display); font-size: 1.1rem; color: var(--blue); letter-spacing: 0.03em; width: 80px; flex-shrink: 0; }
+.clase-name { font-size: 0.88rem; font-weight: 600; color: var(--text); }
+.clase-nivel { font-size: 0.7rem; color: var(--muted); }
+.clase-info { display: flex; flex-direction: column; }
+
+/* ===== PROMO ===== */
+.promo-strip { background: var(--blue); padding: 2.5rem; display: flex; align-items: center; justify-content: space-between; gap: 2rem; flex-wrap: wrap; margin: 3rem 0 0; }
+.promo-text { font-family: var(--font-display); font-size: clamp(1.5rem, 4vw, 2.5rem); letter-spacing: 0.05em; color: white; }
+.promo-text span { color: #FFD700; }
+.promo-note { font-size: 0.82rem; color: rgba(255,255,255,0.75); margin-top: 0.3rem; }
+
+/* ===== UBICACIONES ===== */
+#ubicaciones { padding: 6rem 0; background: var(--bg-alt); }
+.ubi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(360px, 1fr)); gap: 2rem; }
+.ubi-card { background: white; border: 1px solid var(--border); transition: all 0.25s; }
+.ubi-card:hover { border-color: var(--red); box-shadow: 0 4px 24px rgba(204,40,34,0.1); }
+.ubi-map { height: 220px; overflow: hidden; }
+.ubi-map iframe { width: 100%; height: 100%; border: none; filter: saturate(0.5) brightness(1.05); }
+.ubi-info { padding: 1.8rem; }
+.ubi-name { font-family: var(--font-display); font-size: 1.8rem; letter-spacing: 0.04em; color: var(--blue); }
+.ubi-address { font-size: 0.82rem; color: var(--muted); line-height: 1.6; margin: 0.5rem 0 1rem; }
+.ubi-hours { font-size: 0.78rem; color: var(--text-light); margin-bottom: 1.2rem; line-height: 1.6; }
+.ubi-hours strong { color: var(--red); }
+
+/* ===== WHATSAPP ===== */
+#wa-float { position: fixed; bottom: 2rem; right: 2rem; z-index: 700; width: 54px; height: 54px; border-radius: 0; background: #25D366; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 16px rgba(37,211,102,0.4); transition: all 0.2s; cursor: pointer; animation: waPulse 3s infinite; }
+#wa-float:hover { transform: scale(1.08); }
+@keyframes waPulse { 0%,100%{box-shadow:0 4px 16px rgba(37,211,102,0.4)} 50%{box-shadow:0 4px 28px rgba(37,211,102,0.65)} }
+#wa-float svg { width: 26px; height: 26px; fill: white; }
+
+/* ===== FOOTER ===== */
+footer { padding: 3.5rem 2rem 1.5rem; text-align: center; border-top: 3px solid var(--red); background: var(--blue); }
+.footer-logo-wrap { display: flex; align-items: center; justify-content: center; gap: 0.8rem; margin-bottom: 0.8rem; }
+.footer-logo-svg { width: 40px; height: 40px; }
+.footer-logo { font-family: var(--font-display); font-size: 2rem; letter-spacing: 0.2em; color: white; }
+.footer-links { display: flex; gap: 1.8rem; justify-content: center; flex-wrap: wrap; margin: 1.2rem 0; }
+.footer-links a { font-size: 0.7rem; letter-spacing: 0.15em; text-transform: uppercase; color: rgba(255,255,255,0.6); transition: color 0.2s; font-weight: 600; }
+.footer-links a:hover { color: white; }
+.footer-copy { font-size: 0.68rem; color: rgba(255,255,255,0.35); margin-top: 1rem; }
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 768px) {
+  .nav-links, .nav-cta { display: none; }
+  .hamburger { display: flex; }
+  .curso-body { grid-template-columns: 1fr; }
+  .curso-info { border-right: none; border-bottom: 1px solid var(--border); }
+  .ubi-grid { grid-template-columns: 1fr; }
+  .sede-tabs { width: 100%; }
+  .sede-btn { flex: 1; }
+  .promo-strip { flex-direction: column; }
+  .tabs { width: 100%; }
+  .tab-btn { flex: 1; border-right: none; border-bottom: 1px solid var(--border); }
+}
+@media (max-width: 480px) {
+  nav { padding: 0.75rem 1rem; }
+  .nav-logo-sub { display: none; }
+}
+</style>
+</head>
+<body>
+
+<!-- LOADER -->
+<div id="loader">
+  <div class="loader-logo-wrap">
+    <svg class="loader-svg" viewBox="0 0 100 90" xmlns="http://www.w3.org/2000/svg">
+      <polygon points="50,5 90,45 50,85 10,45" fill="#1B3A8C"/>
+      <polygon points="50,12 85,45 50,78 15,45" fill="#CC2822"/>
+      <polygon points="50,28 54,40 67,40 57,48 61,60 50,52 39,60 43,48 33,40 46,40" fill="white"/>
+    </svg>
+    <div class="loader-text">AZÚCAR <span>DANCE</span></div>
+  </div>
+  <div class="loader-bar-wrap"><div class="loader-bar"></div></div>
+</div>
+
+<!-- CURSOR -->
+<div id="cursor-dot"></div>
+<div id="cursor-ring"></div>
+
+<!-- SCROLL BAR -->
+<div id="scroll-bar"></div>
+
+<!-- GRAIN -->
+<div id="grain"></div>
+
+<!-- WHATSAPP -->
+<a id="wa-float" href="https://wa.me/5215566077277" target="_blank" rel="noopener" aria-label="WhatsApp">
+  <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+    <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+  </svg>
+</a>
+
+<!-- NAV -->
+<nav id="navbar">
+  <div class="nav-logo">
+    <svg class="nav-logo-svg" viewBox="0 0 100 90" xmlns="http://www.w3.org/2000/svg">
+      <polygon points="50,5 90,45 50,85 10,45" fill="#1B3A8C"/>
+      <polygon points="50,12 85,45 50,78 15,45" fill="#CC2822"/>
+      <polygon points="50,28 54,40 67,40 57,48 61,60 50,52 39,60 43,48 33,40 46,40" fill="white"/>
+    </svg>
+    <div class="nav-logo-text">
+      <span class="nav-logo-name">AZÚCAR</span>
+      <span class="nav-logo-sub">Dance Studio</span>
+    </div>
+  </div>
+  <ul class="nav-links">
+    <li><a href="#nosotros">Nosotros</a></li>
+    <li><a href="#disciplinas">Disciplinas</a></li>
+    <li><a href="#cursos">Cursos</a></li>
+    <li><a href="#particulares">Particulares</a></li>
+    <li><a href="#coreos">Coreografías</a></li>
+    <li><a href="#horarios">Horarios</a></li>
+    <li><a href="#ubicaciones">Ubicaciones</a></li>
+  </ul>
+  <a class="nav-cta" href="https://wa.me/5215566077277" target="_blank">¡Inscríbete!</a>
+  <button class="hamburger" onclick="toggleMenu()" aria-label="Menú">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+<div class="mobile-menu" id="mobile-menu">
+  <a href="#nosotros" onclick="closeMenu()">Nosotros</a>
+  <a href="#disciplinas" onclick="closeMenu()">Disciplinas</a>
+  <a href="#cursos" onclick="closeMenu()">Cursos</a>
+  <a href="#particulares" onclick="closeMenu()">Particulares</a>
+  <a href="#coreos" onclick="closeMenu()">Coreografías</a>
+  <a href="#horarios" onclick="closeMenu()">Horarios</a>
+  <a href="#ubicaciones" onclick="closeMenu()">Ubicaciones</a>
+  <a href="https://wa.me/5215566077277" target="_blank" style="color:var(--red)">📲 WhatsApp</a>
+</div>
+
+<!-- HERO -->
+<section id="hero">
+  <div id="hero-video-wrap">
+    <iframe id="hero-iframe"
+      src="https://www.youtube.com/embed/kVcOBykVyqE?autoplay=1&mute=1&loop=1&playlist=kVcOBykVyqE&controls=0&showinfo=0&rel=0&modestbranding=1&playsinline=1&iv_load_policy=3"
+      allow="autoplay; encrypted-media" allowfullscreen>
+    </iframe>
+    <div id="hero-video-overlay"></div>
+    <div id="hero-scanlines"></div>
+  </div>
+  <!-- HUD corners -->
+  <div class="hud-corner hud-tl"></div>
+  <div class="hud-corner hud-tr"></div>
+  <div class="hud-corner hud-bl"></div>
+  <div class="hud-corner hud-br"></div>
+  <div class="hero-hud-data">
+    ADS // CDMX — 19.3726° N, 99.1589° W<br>
+    PORTALES · COYOACÁN<br>
+    STATUS: <span style="color:#4ade80">ONLINE</span>
+  </div>
+  <div class="hero-hud-data hero-hud-data-left">
+    10+ AÑOS DE EXPERIENCIA<br>
+    2 SEDES · 5 DISCIPLINAS<br>
+    MODE: <span style="color:#facc15">PREVENTA ACTIVA</span>
+  </div>
+  <div class="hero-content">
+    <div class="hero-eyebrow">Escuela de Baile · CDMX · Portales &amp; Coyoacán</div>
+    <div class="hero-title" id="hero-title"></div>
+    <div class="hero-sub">DANCE STUDIO</div>
+    <p class="hero-tagline">Donde el ritmo se convierte en arte. Aprende bachata, salsa, danza aérea y más con los mejores instructores de la ciudad.</p>
+    <div class="hero-ctas">
+      <a href="#cursos" class="btn-primary">Ver Cursos</a>
+      <a href="https://wa.me/5215566077277" target="_blank" class="btn-outline-white">Clase Gratis</a>
+    </div>
+    <div class="hero-scroll">
+      <div class="scroll-text">Scroll</div>
+      <div class="scroll-line"></div>
+    </div>
+  </div>
+</section>
+
+<!-- NOSOTROS -->
+<section id="nosotros">
+  <div class="nosotros-inner">
+    <div class="reveal-left">
+      <div class="nosotros-badge">Sobre nosotros</div>
+      <h2 class="nosotros-title">¡Sé parte de la<br>comunidad <span>ADS!</span></h2>
+      <div class="nosotros-divider"></div>
+      <div class="nosotros-text">
+        <p>Somos un estudio de baile con más de 10 años de experiencia, enfocado en la enseñanza, difusión y práctica de diversas disciplinas artísticas y físicas.</p>
+        <p>Hemos desarrollado nuestra propia metodología de enseñanza enfocada en el aprendizaje basado en la confianza, disciplina, flexibilidad, dinamismo y diversión.</p>
+        <p>Nuestras disciplinas incluyen: ritmos latinos, bailes urbanos y actividades fitness.</p>
+      </div>
+      <div class="nosotros-disciplines">
+        <span class="discipline-tag">Ritmos Latinos</span>
+        <span class="discipline-tag">Bailes Urbanos</span>
+        <span class="discipline-tag">Danza Aérea</span>
+        <span class="discipline-tag">Fitness</span>
+        <span class="discipline-tag">Coreografías</span>
+      </div>
+    </div>
+    <div class="reveal-right">
+      <div class="nosotros-stats">
+        <div class="stat-item">
+          <div class="stat-num">10+</div>
+          <div class="stat-label">Años de experiencia</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-num">5</div>
+          <div class="stat-label">Disciplinas</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-num">2</div>
+          <div class="stat-label">Sedes en CDMX</div>
+        </div>
+      </div>
+      <div style="margin-top:2rem;padding:2rem;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.12);">
+        <div class="nosotros-badge" style="margin-bottom:0.8rem">Nuestra misión</div>
+        <p style="font-size:0.9rem;color:rgba(255,255,255,0.8);line-height:1.8;font-style:italic;">"Transformar vidas a través del baile, creando una comunidad donde cada persona encuentre su ritmo, su confianza y su comunidad."</p>
+      </div>
+      <div style="margin-top:1.2rem">
+        <a href="https://wa.me/5215566077277" target="_blank" class="btn-primary">📲 Únete a ADS</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- DISCIPLINAS -->
+<section id="disciplinas">
+  <div class="section-inner">
+    <div class="section-header reveal">
+      <div class="section-badge">Lo que enseñamos</div>
+      <h2 class="section-title">NUESTRAS <span class="accent">DISCIPLINAS</span></h2>
+      <div class="red-divider"></div>
+      <p class="section-sub">Domina el baile que siempre quisiste aprender. Clases para todos los niveles.</p>
+    </div>
+    <div class="disc-grid">
+      <div class="disc-card reveal"><div class="disc-icon">🔥</div><div class="disc-name">Bachata</div><div class="disc-desc">Sensual y romántica. Desde tradicional hasta sensual.</div></div>
+      <div class="disc-card reveal"><div class="disc-icon">🌀</div><div class="disc-name">Salsa en Línea</div><div class="disc-desc">Estilo NY, energía latina, pasos precisos.</div></div>
+      <div class="disc-card reveal"><div class="disc-icon">🕺</div><div class="disc-name">Salsa Cubana</div><div class="disc-desc">Casino y rueda de casino caribeño auténtico.</div></div>
+      <div class="disc-card reveal"><div class="disc-icon">💃</div><div class="disc-name">BPF</div><div class="disc-desc">Baile de Piso Fusión — creatividad sin límites.</div></div>
+      <div class="disc-card reveal"><div class="disc-icon">🎪</div><div class="disc-name">Danza Aérea</div><div class="disc-desc">Tela y aro aéreo. Arte, fuerza y gracia.</div></div>
+      <div class="disc-card reveal"><div class="disc-icon">🎶</div><div class="disc-name">Cumbia</div><div class="disc-desc">Ritmo popular mexicano con sabor y tradición.</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- CURSOS DESDE CERO -->
+<section id="cursos">
+  <div class="section-inner">
+    <div class="section-header reveal">
+      <div class="section-badge red">Para principiantes</div>
+      <h2 class="section-title">CURSOS <span class="accent-blue">DESDE CERO</span></h2>
+      <div class="blue-divider"></div>
+      <p class="section-sub">No necesitas experiencia previa. Aprende desde lo más básico hasta bailar con confianza.</p>
+    </div>
+    <div class="curso-selector reveal" id="curso-tabs">
+      <button class="csel-card active" onclick="showCurso(this,'bachata')">
+        <span class="csel-icon">🔥</span>
+        <span class="csel-name">Bachata</span>
+        <span class="csel-desc">Sensual y romántica</span>
+      </button>
+      <button class="csel-card" onclick="showCurso(this,'bpf')">
+        <span class="csel-icon">💃</span>
+        <span class="csel-name">BPF</span>
+        <span class="csel-desc">Baile de Piso Fusión</span>
+      </button>
+      <button class="csel-card" onclick="showCurso(this,'aerea')">
+        <span class="csel-icon">🎪</span>
+        <span class="csel-name">Danza Aérea</span>
+        <span class="csel-desc">Tela y aro aéreo</span>
+      </button>
+      <button class="csel-card" onclick="showCurso(this,'salsa-linea')">
+        <span class="csel-icon">🌀</span>
+        <span class="csel-name">Salsa en Línea</span>
+        <span class="csel-desc">Estilo NY On2</span>
+      </button>
+      <button class="csel-card" onclick="showCurso(this,'salsa-cubana')">
+        <span class="csel-icon">🕺</span>
+        <span class="csel-name">Salsa Cubana</span>
+        <span class="csel-desc">Casino y rueda</span>
+      </button>
+    </div>
+
+    <div class="tab-panel active" id="curso-bachata">
+      <div class="curso-card reveal">
+        <div class="curso-header"><div class="curso-tag">Curso desde cero</div><div class="curso-name">BACHATA</div></div>
+        <div class="curso-body">
+          <div class="curso-info">
+            <div class="info-label">Descripción</div><div class="info-value">Aprende bachata desde los pasos básicos hasta el baile en pareja con musicalidad y estilo.</div>
+            <div class="info-label">Nivel</div><div class="info-value">Principiante → Intermedio</div>
+            <div class="info-label">Duración</div><div class="info-value">4 semanas · 1 clase/semana · 1.5 hrs/clase</div>
+            <div class="info-label">Incluye</div><div class="info-value">Material didáctico, prácticas grupales y diploma de participación.</div>
+          </div>
+          <div class="curso-pricing">
+            <div class="price-item"><span class="price-label">Inscripción + 1er mes</span><span class="price-val">$1,350</span></div>
+            <div class="price-item"><span class="price-label">Mensualidad regular</span><span class="price-val">$1,100</span></div>
+            <div class="price-item"><span class="price-label">Pago anual (ahorra 20%)</span><span class="price-val">$10,560</span></div>
+            <div class="price-item"><span class="price-label">Clase suelta</span><span class="price-val">$180</span></div>
+          </div>
+        </div>
+        <div class="curso-cta">
+          <a href="https://wa.me/5215566077277?text=Hola!%20Me%20interesa%20el%20curso%20de%20Bachata" target="_blank" class="btn-primary">💬 Inscribirme por WhatsApp</a>
+          <div class="pay-grid">
+            <div>
+              <div class="pay-label">💳 Pago en línea — Preventa</div>
+              <div style="display:flex;gap:0.5rem;flex-wrap:wrap">
+                <a href="https://buy.stripe.com/cNi9ASgzY6SScV63Dz18c1g" target="_blank" class="btn-stripe btn-stripe-red">👤 Individual</a>
+                <a href="https://buy.stripe.com/fZu9ASabAdhg8EQfmh18c1f" target="_blank" class="btn-stripe btn-stripe-blue">👫 Pareja</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="tab-panel" id="curso-bpf">
+      <div class="curso-card reveal">
+        <div class="curso-header"><div class="curso-tag">Curso desde cero</div><div class="curso-name">BPF — BAILE DE PISO FUSIÓN</div></div>
+        <div class="curso-body">
+          <div class="curso-info">
+            <div class="info-label">Descripción</div><div class="info-value">Fusión de técnicas de piso, urban, heels y contemporáneo. Libera tu expresión y desarrolla un estilo único.</div>
+            <div class="info-label">Nivel</div><div class="info-value">Principiante → Intermedio</div>
+            <div class="info-label">Duración</div><div class="info-value">4 semanas · 1 clase/semana · 1.5 hrs/clase</div>
+            <div class="info-label">Incluye</div><div class="info-value">Calentamiento especializado, técnica de piso, combinaciones coreográficas.</div>
+          </div>
+          <div class="curso-pricing">
+            <div class="price-item"><span class="price-label">Inscripción + 1er mes</span><span class="price-val">$1,350</span></div>
+            <div class="price-item"><span class="price-label">Mensualidad regular</span><span class="price-val">$1,100</span></div>
+            <div class="price-item"><span class="price-label">Pago anual (ahorra 20%)</span><span class="price-val">$10,560</span></div>
+            <div class="price-item"><span class="price-label">Clase suelta</span><span class="price-val">$180</span></div>
+          </div>
+        </div>
+        <div class="curso-cta">
+          <a href="https://wa.me/5215566077277?text=Hola!%20Me%20interesa%20el%20curso%20de%20BPF" target="_blank" class="btn-primary">💬 Inscribirme por WhatsApp</a>
+          <div class="pay-grid">
+            <div>
+              <div class="pay-label">💳 Pago en línea — Preventa</div>
+              <div style="display:flex;gap:0.5rem;flex-wrap:wrap">
+                <a href="https://buy.stripe.com/cNi9ASgzY6SScV63Dz18c1g" target="_blank" class="btn-stripe btn-stripe-red">👤 Individual</a>
+                <a href="https://buy.stripe.com/fZu9ASabAdhg8EQfmh18c1f" target="_blank" class="btn-stripe btn-stripe-blue">👫 Pareja</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="tab-panel" id="curso-aerea">
+      <div class="curso-card reveal">
+        <div class="curso-header"><div class="curso-tag">Curso desde cero</div><div class="curso-name">DANZA AÉREA</div></div>
+        <div class="curso-body">
+          <div class="curso-info">
+            <div class="info-label">Descripción</div><div class="info-value">Tela y aro aéreo para principiantes absolutas. Desarrolla fuerza, flexibilidad y confianza.</div>
+            <div class="info-label">Nivel</div><div class="info-value">Principiante absoluta</div>
+            <div class="info-label">Duración</div><div class="info-value">4 semanas · 1 clase/semana · 1.5 hrs/clase</div>
+            <div class="info-label">Incluye</div><div class="info-value">Equipo de seguridad proporcionado, acondicionamiento físico.</div>
+          </div>
+          <div class="curso-pricing">
+            <div class="price-item"><span class="price-label">Inscripción + 1er mes</span><span class="price-val">$1,350</span></div>
+            <div class="price-item"><span class="price-label">Mensualidad regular</span><span class="price-val">$1,100</span></div>
+            <div class="price-item"><span class="price-label">Pago anual (ahorra 20%)</span><span class="price-val">$10,560</span></div>
+            <div class="price-item"><span class="price-label">Clase suelta</span><span class="price-val">$180</span></div>
+          </div>
+        </div>
+        <div class="curso-cta">
+          <a href="https://wa.me/5215566077277?text=Hola!%20Me%20interesa%20Danza%20Aérea" target="_blank" class="btn-primary">💬 Inscribirme por WhatsApp</a>
+          <div class="pay-grid">
+            <div>
+              <div class="pay-label">💳 Pago en línea — Preventa</div>
+              <div style="display:flex;gap:0.5rem;flex-wrap:wrap">
+                <a href="https://buy.stripe.com/5kQ9AS83sdhgbR2eid18c1b" target="_blank" class="btn-stripe btn-stripe-red">👤 Individual</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="tab-panel" id="curso-salsa-linea">
+      <div class="curso-card reveal">
+        <div class="curso-header"><div class="curso-tag">Curso desde cero</div><div class="curso-name">SALSA EN LÍNEA</div></div>
+        <div class="curso-body">
+          <div class="curso-info">
+            <div class="info-label">Descripción</div><div class="info-value">Estilo On2 / NY. Aprende a moverte en línea con técnica, timing y conexión de pareja desde cero.</div>
+            <div class="info-label">Nivel</div><div class="info-value">Principiante → Intermedio</div>
+            <div class="info-label">Duración</div><div class="info-value">4 semanas · 1 clase/semana · 1.5 hrs/clase</div>
+            <div class="info-label">Incluye</div><div class="info-value">Teoría musical, pasos básicos, giros, combinaciones y práctica en pareja.</div>
+          </div>
+          <div class="curso-pricing">
+            <div class="price-item"><span class="price-label">Inscripción + 1er mes</span><span class="price-val">$1,350</span></div>
+            <div class="price-item"><span class="price-label">Mensualidad regular</span><span class="price-val">$1,100</span></div>
+            <div class="price-item"><span class="price-label">Pago anual (ahorra 20%)</span><span class="price-val">$10,560</span></div>
+            <div class="price-item"><span class="price-label">Clase suelta</span><span class="price-val">$180</span></div>
+          </div>
+        </div>
+        <div class="curso-cta">
+          <a href="https://wa.me/5215566077277?text=Hola!%20Me%20interesa%20Salsa%20en%20Línea" target="_blank" class="btn-primary">💬 Inscribirme por WhatsApp</a>
+          <div class="pay-grid">
+            <div>
+              <div class="pay-label">💳 Pago en línea — Preventa</div>
+              <div style="display:flex;gap:0.5rem;flex-wrap:wrap">
+                <a href="https://buy.stripe.com/cNi9ASgzY6SScV63Dz18c1g" target="_blank" class="btn-stripe btn-stripe-red">👤 Individual</a>
+                <a href="https://buy.stripe.com/fZu9ASabAdhg8EQfmh18c1f" target="_blank" class="btn-stripe btn-stripe-blue">👫 Pareja</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="tab-panel" id="curso-salsa-cubana">
+      <div class="curso-card reveal">
+        <div class="curso-header"><div class="curso-tag">Curso desde cero</div><div class="curso-name">SALSA CUBANA</div></div>
+        <div class="curso-body">
+          <div class="curso-info">
+            <div class="info-label">Descripción</div><div class="info-value">Casino y Rueda de Casino. Aprende el baile circular cubano con sabor caribeño auténtico.</div>
+            <div class="info-label">Nivel</div><div class="info-value">Principiante → Intermedio</div>
+            <div class="info-label">Duración</div><div class="info-value">4 semanas · 1 clase/semana · 1.5 hrs/clase</div>
+            <div class="info-label">Incluye</div><div class="info-value">Casino básico, figuras, rueda de casino y musicalidad cubana.</div>
+          </div>
+          <div class="curso-pricing">
+            <div class="price-item"><span class="price-label">Inscripción + 1er mes</span><span class="price-val">$1,350</span></div>
+            <div class="price-item"><span class="price-label">Mensualidad regular</span><span class="price-val">$1,100</span></div>
+            <div class="price-item"><span class="price-label">Pago anual (ahorra 20%)</span><span class="price-val">$10,560</span></div>
+            <div class="price-item"><span class="price-label">Clase suelta</span><span class="price-val">$180</span></div>
+          </div>
+        </div>
+        <div class="curso-cta">
+          <a href="https://wa.me/5215566077277?text=Hola!%20Me%20interesa%20Salsa%20Cubana" target="_blank" class="btn-primary">💬 Inscribirme por WhatsApp</a>
+          <div class="pay-grid">
+            <div>
+              <div class="pay-label">💳 Pago en línea — Preventa</div>
+              <div style="display:flex;gap:0.5rem;flex-wrap:wrap">
+                <a href="https://buy.stripe.com/cNi9ASgzY6SScV63Dz18c1g" target="_blank" class="btn-stripe btn-stripe-red">👤 Individual</a>
+                <a href="https://buy.stripe.com/fZu9ASabAdhg8EQfmh18c1f" target="_blank" class="btn-stripe btn-stripe-blue">👫 Pareja</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CLASES PARTICULARES -->
+<section id="particulares">
+  <div class="section-inner">
+    <div class="section-header reveal">
+      <div class="section-badge">Atención personalizada</div>
+      <h2 class="section-title">CLASES <span class="accent">PARTICULARES</span></h2>
+      <div class="red-divider"></div>
+      <p class="section-sub">Avanza más rápido con clases privadas diseñadas exclusivamente para ti.</p>
+    </div>
+    <div class="particulares-grid">
+      <div class="part-card reveal">
+        <div class="part-icon">👤</div>
+        <div class="part-title">Individual</div>
+        <div class="part-desc">Atención 100% personalizada. El instructor se adapta a tu ritmo y metas específicas.</div>
+        <div class="part-price">$600 <span>/ hora</span></div>
+        <br>
+        <a href="https://wa.me/5215566077277?text=Hola!%20Me%20interesan%20clases%20particulares%20individuales" target="_blank" class="btn-outline" style="font-size:0.7rem;padding:0.55rem 1.2rem;margin-top:1rem">Reservar →</a>
+      </div>
+      <div class="part-card reveal">
+        <div class="part-icon">👫</div>
+        <div class="part-title">En Pareja</div>
+        <div class="part-desc">Perfectas para novios, parejas de baile o amigos que quieren aprender juntos.</div>
+        <div class="part-price">$750 <span>/ hora (pareja)</span></div>
+        <br>
+        <a href="https://wa.me/5215566077277?text=Hola!%20Me%20interesan%20clases%20en%20pareja" target="_blank" class="btn-outline" style="font-size:0.7rem;padding:0.55rem 1.2rem;margin-top:1rem">Reservar →</a>
+      </div>
+      <div class="part-card reveal">
+        <div class="part-icon">👨‍👩‍👧</div>
+        <div class="part-title">Grupo Pequeño</div>
+        <div class="part-desc">Grupos de 3 a 6 personas. Ideal para amigos o equipos que quieren aprender juntos.</div>
+        <div class="part-price">$900 <span>/ hora (grupo)</span></div>
+        <br>
+        <a href="https://wa.me/5215566077277?text=Hola!%20Me%20interesan%20clases%20grupales" target="_blank" class="btn-outline" style="font-size:0.7rem;padding:0.55rem 1.2rem;margin-top:1rem">Reservar →</a>
+      </div>
+      <div class="part-card reveal">
+        <div class="part-icon">🌐</div>
+        <div class="part-title">Online (Zoom)</div>
+        <div class="part-desc">Aprende desde casa. Clases en vivo con el mismo nivel de atención personalizada.</div>
+        <div class="part-price">$450 <span>/ hora</span></div>
+        <br>
+        <a href="https://wa.me/5215566077277?text=Hola!%20Me%20interesan%20clases%20online" target="_blank" class="btn-outline" style="font-size:0.7rem;padding:0.55rem 1.2rem;margin-top:1rem">Reservar →</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- COREOGRAFÍAS -->
+<section id="coreos">
+  <div class="section-inner">
+    <div class="section-header reveal">
+      <div class="section-badge red">Momentos que duran para siempre</div>
+      <h2 class="section-title">COREOGRAFÍAS <span class="accent-blue">ESPECIALES</span></h2>
+      <div class="blue-divider"></div>
+      <p class="section-sub">Haz de tu evento algo inolvidable. Diseñamos la coreografía perfecta para tu boda o quinceañera.</p>
+    </div>
+    <div class="tabs" id="coreo-tabs">
+      <button class="tab-btn active" onclick="showCoreo(this,'xv')">💃 XV Años</button>
+      <button class="tab-btn" onclick="showCoreo(this,'boda')">💍 Boda</button>
+    </div>
+
+    <div class="tab-panel active" id="coreo-xv">
+      <div class="coreo-grid reveal">
+        <div class="coreo-pkg">
+          <div class="pkg-name">BÁSICO</div><div class="pkg-price"><span class="currency">$</span>4,500</div>
+          <ul class="pkg-includes"><li>3 horas de ensayo</li><li>Coreografía para 1 canción</li><li>Vals + 1 pieza sorpresa</li><li>Coordinación el día del evento</li></ul>
+          <a href="https://wa.me/5215566077277?text=Paquete%20Básico%20XV%20Años" target="_blank" class="btn-outline" style="font-size:0.72rem;padding:0.6rem 1.2rem">Solicitar Info</a>
+        </div>
+        <div class="coreo-pkg featured">
+          <div class="pkg-name">ESTÁNDAR</div><div class="pkg-price"><span class="currency">$</span>7,500</div>
+          <ul class="pkg-includes"><li>6 horas de ensayo</li><li>2 canciones coreografiadas</li><li>Vals + sorpresa + chambelanes</li><li>Ensayo general previo</li><li>Coordinación el día del evento</li></ul>
+          <a href="https://wa.me/5215566077277?text=Paquete%20Estándar%20XV%20Años" target="_blank" class="btn-primary" style="font-size:0.72rem;padding:0.6rem 1.2rem">Solicitar Info</a>
+        </div>
+        <div class="coreo-pkg">
+          <div class="pkg-name">PREMIUM</div><div class="pkg-price"><span class="currency">$</span>12,000</div>
+          <ul class="pkg-includes"><li>10 horas de ensayo</li><li>3+ coreografías completas</li><li>Chambelanes + invitados incluidos</li><li>2 ensayos generales</li><li>Maestra en el evento</li></ul>
+          <a href="https://wa.me/5215566077277?text=Paquete%20Premium%20XV%20Años" target="_blank" class="btn-outline" style="font-size:0.72rem;padding:0.6rem 1.2rem">Solicitar Info</a>
+        </div>
+        <div class="coreo-pkg">
+          <div class="pkg-name">TOTAL</div><div class="pkg-price"><span class="currency">$</span>18,500</div>
+          <ul class="pkg-includes"><li>Ensayos ilimitados (4 semanas)</li><li>Show con efectos especiales</li><li>Coordinación total del evento</li><li>Vestuario sugerido incluido</li><li>Maestra en el evento todo el día</li></ul>
+          <a href="https://wa.me/5215566077277?text=Paquete%20Total%20XV%20Años" target="_blank" class="btn-outline" style="font-size:0.72rem;padding:0.6rem 1.2rem">Solicitar Info</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="tab-panel" id="coreo-boda">
+      <div class="coreo-grid reveal">
+        <div class="coreo-pkg">
+          <div class="pkg-name">BÁSICO</div><div class="pkg-price"><span class="currency">$</span>5,000</div>
+          <ul class="pkg-includes"><li>3 horas de ensayo</li><li>Vals nupcial coreografiado</li><li>1 canción temática</li><li>Coordinación el día del evento</li></ul>
+          <a href="https://wa.me/5215566077277?text=Paquete%20Básico%20Boda" target="_blank" class="btn-outline" style="font-size:0.72rem;padding:0.6rem 1.2rem">Solicitar Info</a>
+        </div>
+        <div class="coreo-pkg featured">
+          <div class="pkg-name">ESTÁNDAR</div><div class="pkg-price"><span class="currency">$</span>9,000</div>
+          <ul class="pkg-includes"><li>6 horas de ensayo</li><li>Vals + sorpresa a invitados</li><li>2 canciones completas</li><li>Ensayo general previo</li><li>Coordinación el día del evento</li></ul>
+          <a href="https://wa.me/5215566077277?text=Paquete%20Estándar%20Boda" target="_blank" class="btn-primary" style="font-size:0.72rem;padding:0.6rem 1.2rem">Solicitar Info</a>
+        </div>
+        <div class="coreo-pkg">
+          <div class="pkg-name">PREMIUM</div><div class="pkg-price"><span class="currency">$</span>14,000</div>
+          <ul class="pkg-includes"><li>10 horas de ensayo</li><li>Vals + show + padrinos</li><li>3+ canciones coreografiadas</li><li>2 ensayos generales</li><li>Maestra presente el día</li></ul>
+          <a href="https://wa.me/5215566077277?text=Paquete%20Premium%20Boda" target="_blank" class="btn-outline" style="font-size:0.72rem;padding:0.6rem 1.2rem">Solicitar Info</a>
+        </div>
+        <div class="coreo-pkg">
+          <div class="pkg-name">TOTAL</div><div class="pkg-price"><span class="currency">$</span>22,000</div>
+          <ul class="pkg-includes"><li>Ensayos ilimitados (4 semanas)</li><li>Show de baile completo</li><li>Invitados incluidos en show</li><li>Coordinación total del evento</li><li>Experiencia VIP todo el día</li></ul>
+          <a href="https://wa.me/5215566077277?text=Paquete%20Total%20Boda" target="_blank" class="btn-outline" style="font-size:0.72rem;padding:0.6rem 1.2rem">Solicitar Info</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- HORARIOS -->
+<section id="horarios">
+  <div class="section-inner">
+    <div class="section-header reveal">
+      <div class="section-badge">Elige tu sede y horario</div>
+      <h2 class="section-title">HORARIOS <span class="accent">POR SUCURSAL</span></h2>
+      <div class="red-divider"></div>
+    </div>
+
+    <div class="sede-tabs reveal">
+      <button class="sede-btn active" onclick="showSede(this,'portales')">📍 Portales</button>
+      <button class="sede-btn" onclick="showSede(this,'coyoacan')">📍 Coyoacán</button>
+    </div>
+
+    <!-- PORTALES -->
+    <div class="horario-panel active" id="sede-portales">
+      <div class="dia-tabs">
+        <button class="dia-btn active" onclick="showDia(this,'p','lun-mie')">Lun / Mié</button>
+        <button class="dia-btn" onclick="showDia(this,'p','mar-jue')">Mar / Jue</button>
+        <button class="dia-btn" onclick="showDia(this,'p','vie')">Viernes</button>
+        <button class="dia-btn" onclick="showDia(this,'p','sab')">Sábado</button>
+        <button class="dia-btn" onclick="showDia(this,'p','dom')">Domingo</button>
+      </div>
+      <div class="dia-panel active" id="p-lun-mie">
+        <div class="clase-card bachata"><div class="clase-time">10:00</div><div class="clase-info"><div class="clase-name">Bachata Básico</div><div class="clase-nivel">Principiantes</div></div></div>
+        <div class="clase-card bpf"><div class="clase-time">11:30</div><div class="clase-info"><div class="clase-name">BPF / Fusión</div><div class="clase-nivel">Todos los niveles</div></div></div>
+        <div class="clase-card salsa"><div class="clase-time">17:00</div><div class="clase-info"><div class="clase-name">Salsa en Línea</div><div class="clase-nivel">Principiantes</div></div></div>
+        <div class="clase-card bachata"><div class="clase-time">18:30</div><div class="clase-info"><div class="clase-name">Bachata Sensual</div><div class="clase-nivel">Intermedio</div></div></div>
+        <div class="clase-card casino"><div class="clase-time">20:00</div><div class="clase-info"><div class="clase-name">Salsa Cubana / Casino</div><div class="clase-nivel">Principiantes</div></div></div>
+        <div class="clase-card aerea"><div class="clase-time">21:30</div><div class="clase-info"><div class="clase-name">Danza Aérea — Tela</div><div class="clase-nivel">Principiantes</div></div></div>
+      </div>
+      <div class="dia-panel" id="p-mar-jue">
+        <div class="clase-card salsa"><div class="clase-time">10:00</div><div class="clase-info"><div class="clase-name">Salsa en Línea Intermedio</div><div class="clase-nivel">Intermedio</div></div></div>
+        <div class="clase-card bachata"><div class="clase-time">17:00</div><div class="clase-info"><div class="clase-name">Bachata Básico</div><div class="clase-nivel">Principiantes</div></div></div>
+        <div class="clase-card cumbia"><div class="clase-time">18:30</div><div class="clase-info"><div class="clase-name">Cumbia</div><div class="clase-nivel">Principiantes</div></div></div>
+        <div class="clase-card bpf"><div class="clase-time">20:00</div><div class="clase-info"><div class="clase-name">BPF Avanzado</div><div class="clase-nivel">Avanzado</div></div></div>
+        <div class="clase-card aerea"><div class="clase-time">21:30</div><div class="clase-info"><div class="clase-name">Aro Aéreo</div><div class="clase-nivel">Principiantes</div></div></div>
+      </div>
+      <div class="dia-panel" id="p-vie">
+        <div class="clase-card bachata"><div class="clase-time">18:00</div><div class="clase-info"><div class="clase-name">Bachata Social</div><div class="clase-nivel">Todos los niveles</div></div></div>
+        <div class="clase-card salsa"><div class="clase-time">19:30</div><div class="clase-info"><div class="clase-name">Salsa On2</div><div class="clase-nivel">Intermedio</div></div></div>
+        <div class="clase-card casino"><div class="clase-time">21:00</div><div class="clase-info"><div class="clase-name">Rueda de Casino</div><div class="clase-nivel">Intermedio</div></div></div>
+      </div>
+      <div class="dia-panel" id="p-sab">
+        <div class="clase-card bpf"><div class="clase-time">10:00</div><div class="clase-info"><div class="clase-name">BPF Matutino</div><div class="clase-nivel">Principiantes</div></div></div>
+        <div class="clase-card aerea"><div class="clase-time">11:30</div><div class="clase-info"><div class="clase-name">Danza Aérea Intensivo</div><div class="clase-nivel">Todos los niveles</div></div></div>
+        <div class="clase-card bachata"><div class="clase-time">13:00</div><div class="clase-info"><div class="clase-name">Bachata Avanzado</div><div class="clase-nivel">Avanzado</div></div></div>
+        <div class="clase-card salsa"><div class="clase-time">15:00</div><div class="clase-info"><div class="clase-name">Salsa Cubana Intermedio</div><div class="clase-nivel">Intermedio</div></div></div>
+        <div class="clase-card other"><div class="clase-time">16:30</div><div class="clase-info"><div class="clase-name">Práctica Social Libre</div><div class="clase-nivel">Todos</div></div></div>
+      </div>
+      <div class="dia-panel" id="p-dom">
+        <div class="clase-card salsa"><div class="clase-time">11:00</div><div class="clase-info"><div class="clase-name">Salsa Básico</div><div class="clase-nivel">Principiantes</div></div></div>
+        <div class="clase-card bachata"><div class="clase-time">12:30</div><div class="clase-info"><div class="clase-name">Bachata Sensual Intermedio</div><div class="clase-nivel">Intermedio</div></div></div>
+        <div class="clase-card cumbia"><div class="clase-time">14:00</div><div class="clase-info"><div class="clase-name">Cumbia Avanzada</div><div class="clase-nivel">Avanzado</div></div></div>
+      </div>
+    </div>
+
+    <!-- COYOACÁN -->
+    <div class="horario-panel" id="sede-coyoacan">
+      <div class="dia-tabs">
+        <button class="dia-btn active" onclick="showDia(this,'c','lun-mie')">Lun / Mié</button>
+        <button class="dia-btn" onclick="showDia(this,'c','mar-jue')">Mar / Jue</button>
+        <button class="dia-btn" onclick="showDia(this,'c','vie')">Viernes</button>
+        <button class="dia-btn" onclick="showDia(this,'c','sab')">Sábado</button>
+        <button class="dia-btn" onclick="showDia(this,'c','dom')">Domingo</button>
+      </div>
+      <div class="dia-panel active" id="c-lun-mie">
+        <div class="clase-card casino"><div class="clase-time">09:00</div><div class="clase-info"><div class="clase-name">Casino Básico</div><div class="clase-nivel">Principiantes</div></div></div>
+        <div class="clase-card bachata"><div class="clase-time">10:30</div><div class="clase-info"><div class="clase-name">Bachata Básico</div><div class="clase-nivel">Principiantes</div></div></div>
+        <div class="clase-card bpf"><div class="clase-time">17:00</div><div class="clase-info"><div class="clase-name">BPF Fusión</div><div class="clase-nivel">Todos los niveles</div></div></div>
+        <div class="clase-card salsa"><div class="clase-time">18:30</div><div class="clase-info"><div class="clase-name">Salsa en Línea</div><div class="clase-nivel">Principiantes</div></div></div>
+        <div class="clase-card aerea"><div class="clase-time">20:00</div><div class="clase-info"><div class="clase-name">Tela Aérea</div><div class="clase-nivel">Principiantes</div></div></div>
+      </div>
+      <div class="dia-panel" id="c-mar-jue">
+        <div class="clase-card bachata"><div class="clase-time">10:00</div><div class="clase-info"><div class="clase-name">Bachata Intermedio</div><div class="clase-nivel">Intermedio</div></div></div>
+        <div class="clase-card cumbia"><div class="clase-time">17:00</div><div class="clase-info"><div class="clase-name">Cumbia Básico</div><div class="clase-nivel">Principiantes</div></div></div>
+        <div class="clase-card salsa"><div class="clase-time">18:30</div><div class="clase-info"><div class="clase-name">Salsa Cubana</div><div class="clase-nivel">Principiantes</div></div></div>
+        <div class="clase-card aerea"><div class="clase-time">20:00</div><div class="clase-info"><div class="clase-name">Aro Aéreo Intermedio</div><div class="clase-nivel">Intermedio</div></div></div>
+      </div>
+      <div class="dia-panel" id="c-vie">
+        <div class="clase-card salsa"><div class="clase-time">17:00</div><div class="clase-info"><div class="clase-name">Salsa Social</div><div class="clase-nivel">Todos los niveles</div></div></div>
+        <div class="clase-card bachata"><div class="clase-time">18:30</div><div class="clase-info"><div class="clase-name">Bachata Social</div><div class="clase-nivel">Todos los niveles</div></div></div>
+        <div class="clase-card casino"><div class="clase-time">20:00</div><div class="clase-info"><div class="clase-name">Rueda de Casino</div><div class="clase-nivel">Intermedio</div></div></div>
+      </div>
+      <div class="dia-panel" id="c-sab">
+        <div class="clase-card bpf"><div class="clase-time">10:00</div><div class="clase-info"><div class="clase-name">BPF Matutino</div><div class="clase-nivel">Principiantes</div></div></div>
+        <div class="clase-card aerea"><div class="clase-time">11:30</div><div class="clase-info"><div class="clase-name">Aérea Tela</div><div class="clase-nivel">Principiantes</div></div></div>
+        <div class="clase-card bachata"><div class="clase-time">13:00</div><div class="clase-info"><div class="clase-name">Bachata Avanzado</div><div class="clase-nivel">Avanzado</div></div></div>
+        <div class="clase-card other"><div class="clase-time">16:00</div><div class="clase-info"><div class="clase-name">Práctica Libre Social</div><div class="clase-nivel">Todos</div></div></div>
+      </div>
+      <div class="dia-panel" id="c-dom">
+        <div class="clase-card salsa"><div class="clase-time">11:00</div><div class="clase-info"><div class="clase-name">Salsa On1 Básico</div><div class="clase-nivel">Principiantes</div></div></div>
+        <div class="clase-card casino"><div class="clase-time">12:30</div><div class="clase-info"><div class="clase-name">Casino Intermedio</div><div class="clase-nivel">Intermedio</div></div></div>
+      </div>
+    </div>
+
+    <div class="promo-strip reveal">
+      <div>
+        <div class="promo-text">🎁 Primera clase <span>GRATIS</span></div>
+        <div class="promo-note">Sin compromisos. Ven a conocernos y prueba tu disciplina favorita.</div>
+      </div>
+      <a href="https://wa.me/5215566077277?text=Hola!%20Quiero%20mi%20clase%20gratis" target="_blank" class="btn-primary">Agendar Clase Gratis</a>
+    </div>
+  </div>
+</section>
+
+<!-- UBICACIONES -->
+<section id="ubicaciones">
+  <div class="section-inner">
+    <div class="section-header reveal">
+      <div class="section-badge">Encuéntranos</div>
+      <h2 class="section-title">NUESTRAS <span class="accent-blue">UBICACIONES</span></h2>
+      <div class="blue-divider"></div>
+    </div>
+    <div class="ubi-grid">
+      <div class="ubi-card reveal-left">
+        <div class="ubi-map">
+          <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3763.1!2d-99.1589!3d19.3726!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMTnCsDIyJzIxLjQiTiA5OcKwMDknMzIuMCJX!5e0!3m2!1ses!2smx!4v1620000000000!5m2!1ses!2smx" allowfullscreen="" loading="lazy"></iframe>
+        </div>
+        <div class="ubi-info">
+          <div class="ubi-name">SEDE PORTALES</div>
+          <div class="ubi-address">📍 Prolongación División del Norte 3007, Col. Los Ángeles, Iztapalapa, CDMX</div>
+          <div class="ubi-hours"><strong>Lun–Vie:</strong> 9:00 – 22:00 &nbsp;|&nbsp; <strong>Sáb:</strong> 9:00 – 18:00 &nbsp;|&nbsp; <strong>Dom:</strong> 10:00 – 16:00</div>
+          <div style="display:flex;gap:0.8rem;flex-wrap:wrap;margin-top:1rem">
+            <a href="https://wa.me/5215566077277" target="_blank" class="btn-primary" style="font-size:0.72rem;padding:0.55rem 1.1rem">📲 WhatsApp</a>
+            <a href="https://maps.google.com/?q=Prolongación+División+del+Norte+3007+Iztapalapa+CDMX" target="_blank" class="btn-outline" style="font-size:0.72rem;padding:0.55rem 1.1rem">🗺 Cómo llegar</a>
+          </div>
+        </div>
+      </div>
+      <div class="ubi-card reveal-right">
+        <div class="ubi-map">
+          <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3764.8!2d-99.1622!3d19.3498!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMTnCsDIwJzU5LjMiTiA5OcKwMDknNDMuOSJX!5e0!3m2!1ses!2smx!4v1620000000001!5m2!1ses!2smx" allowfullscreen="" loading="lazy"></iframe>
+        </div>
+        <div class="ubi-info">
+          <div class="ubi-name">SEDE COYOACÁN</div>
+          <div class="ubi-address">📍 Av. Universidad 1900, Col. Copilco El Alto, Coyoacán, CDMX</div>
+          <div class="ubi-hours"><strong>Lun–Vie:</strong> 9:00 – 22:00 &nbsp;|&nbsp; <strong>Sáb:</strong> 9:00 – 18:00 &nbsp;|&nbsp; <strong>Dom:</strong> 11:00 – 15:00</div>
+          <div style="display:flex;gap:0.8rem;flex-wrap:wrap;margin-top:1rem">
+            <a href="https://wa.me/5215566077277" target="_blank" class="btn-primary" style="font-size:0.72rem;padding:0.55rem 1.1rem">📲 WhatsApp</a>
+            <a href="https://maps.google.com/?q=Av.+Universidad+1900+Coyoacán+CDMX" target="_blank" class="btn-outline" style="font-size:0.72rem;padding:0.55rem 1.1rem">🗺 Cómo llegar</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo-wrap">
+    <svg class="footer-logo-svg" viewBox="0 0 100 90" xmlns="http://www.w3.org/2000/svg">
+      <polygon points="50,5 90,45 50,85 10,45" fill="rgba(255,255,255,0.2)"/>
+      <polygon points="50,12 85,45 50,78 15,45" fill="rgba(255,255,255,0.4)"/>
+      <polygon points="50,28 54,40 67,40 57,48 61,60 50,52 39,60 43,48 33,40 46,40" fill="white"/>
+    </svg>
+    <div class="footer-logo">AZÚCAR</div>
+  </div>
+  <p style="font-size:0.78rem;color:rgba(255,255,255,0.55);margin-bottom:0.5rem">Escuela de Baile · CDMX · 📞 55 6607 7277</p>
+  <div class="footer-links">
+    <a href="#disciplinas">Disciplinas</a>
+    <a href="#cursos">Cursos</a>
+    <a href="#particulares">Particulares</a>
+    <a href="#coreos">Coreografías</a>
+    <a href="#horarios">Horarios</a>
+    <a href="#ubicaciones">Ubicaciones</a>
+    <a href="https://wa.me/5215566077277" target="_blank">WhatsApp</a>
+  </div>
+  <p class="footer-copy">© 2024 Azúcar Dance Studio · Todos los derechos reservados</p>
+</footer>
+
+<script>
+// ===== CURSOR =====
+const dot = document.getElementById('cursor-dot');
+const ring = document.getElementById('cursor-ring');
+let mx = 0, my = 0, rx = 0, ry = 0;
+document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; });
+(function animateCursor() {
+  dot.style.left = mx + 'px'; dot.style.top = my + 'px';
+  rx += (mx - rx) * 0.12; ry += (my - ry) * 0.12;
+  ring.style.left = rx + 'px'; ring.style.top = ry + 'px';
+  requestAnimationFrame(animateCursor);
+})();
+document.querySelectorAll('a, button, .disc-card, .part-card, .coreo-pkg').forEach(el => {
+  el.addEventListener('mouseenter', () => { ring.style.transform = 'translate(-50%,-50%) scale(1.8)'; ring.style.borderColor = 'var(--red)'; });
+  el.addEventListener('mouseleave', () => { ring.style.transform = 'translate(-50%,-50%) scale(1)'; ring.style.borderColor = 'var(--blue)'; });
+});
+
+// ===== LOADER =====
+window.addEventListener('load', () => {
+  setTimeout(() => {
+    document.getElementById('loader').classList.add('hidden');
+    // Burst the video through the screen
+    const vw = document.getElementById('hero-video-wrap');
+    vw.classList.add('burst');
+    vw.addEventListener('animationend', () => vw.classList.remove('burst'), { once: true });
+    animateHeroTitle();
+  }, 2200);
+});
+
+// ===== HERO MOUSE TILT =====
+const heroEl = document.getElementById('hero');
+const videoWrap = document.getElementById('hero-video-wrap');
+heroEl.addEventListener('mousemove', e => {
+  if (window.scrollY > window.innerHeight * 0.4) return;
+  const r = heroEl.getBoundingClientRect();
+  const x = (e.clientX - r.left) / r.width - 0.5;
+  const y = (e.clientY - r.top)  / r.height - 0.5;
+  videoWrap.style.transform = `perspective(1000px) rotateX(${-y * 7}deg) rotateY(${x * 7}deg) scale(1.04)`;
+});
+heroEl.addEventListener('mouseleave', () => {
+  videoWrap.style.transform = '';
+});
+
+// ===== NAV LINK TEXT SCRAMBLE =====
+const GLYPHS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%&!';
+function scramble(el) {
+  const orig = el.dataset.orig || el.textContent;
+  el.dataset.orig = orig;
+  let step = 0;
+  clearInterval(el._sc);
+  el._sc = setInterval(() => {
+    el.textContent = orig.split('').map((ch, i) => {
+      if (ch === ' ') return ' ';
+      return i < step / 2 ? orig[i] : GLYPHS[Math.floor(Math.random() * GLYPHS.length)];
+    }).join('');
+    step++;
+    if (step > orig.length * 2) { clearInterval(el._sc); el.textContent = orig; }
+  }, 22);
+}
+document.querySelectorAll('.nav-links a, .mobile-menu a').forEach(a => {
+  a.addEventListener('mouseenter', () => scramble(a));
+});
+
+// ===== HERO TITLE SPLIT ANIMATION =====
+function animateHeroTitle() {
+  const letters = ['A','Z','Ú','C','A','R'];
+  const accents = [false, false, false, false, false, true]; // last letter = red
+  const container = document.getElementById('hero-title');
+  letters.forEach((l, i) => {
+    const span = document.createElement('span');
+    span.className = 'letter' + (accents[i] ? ' hero-accent' : '');
+    span.textContent = l;
+    container.appendChild(span);
+    setTimeout(() => span.classList.add('active'), i * 120 + 100);
+  });
+}
+
+// ===== SCROLL PROGRESS =====
+window.addEventListener('scroll', () => {
+  const scrolled = window.scrollY;
+  const total = document.body.scrollHeight - window.innerHeight;
+  document.getElementById('scroll-bar').style.width = (scrolled / total * 100) + '%';
+}, { passive: true });
+
+// ===== VIDEO PARALLAX =====
+window.addEventListener('scroll', () => {
+  const sy = window.scrollY;
+  const vh = window.innerHeight;
+  if (sy < vh) {
+    const iframe = document.getElementById('hero-iframe');
+    if (iframe) iframe.style.transform = `translate(-50%, calc(-50% + ${sy * 0.35}px)) scale(1.15)`;
+    const heroContent = document.querySelector('.hero-content');
+    if (heroContent) {
+      heroContent.style.transform = `translateY(${sy * 0.18}px)`;
+      heroContent.style.opacity = 1 - (sy / vh) * 1.2;
+    }
+  }
+}, { passive: true });
+
+// ===== INTERSECTION OBSERVER =====
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(el => { if (el.isIntersecting) { el.target.classList.add('active'); observer.unobserve(el.target); } });
+}, { threshold: 0.1 });
+document.querySelectorAll('.reveal, .reveal-left, .reveal-right').forEach(el => observer.observe(el));
+
+// ===== TABS: CURSOS =====
+function showCurso(btn, id) {
+  document.querySelectorAll('#curso-tabs .csel-card').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.tab-panel[id^="curso-"]').forEach(p => p.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('curso-' + id).classList.add('active');
+}
+
+// ===== TABS: COREO =====
+function showCoreo(btn, id) {
+  document.querySelectorAll('#coreo-tabs .tab-btn').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('[id^="coreo-"]').forEach(p => p.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('coreo-' + id).classList.add('active');
+}
+
+// ===== TABS: SEDE =====
+function showSede(btn, id) {
+  document.querySelectorAll('.sede-btn').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.horario-panel').forEach(p => p.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('sede-' + id).classList.add('active');
+}
+
+// ===== TABS: DIA =====
+function showDia(btn, sede, dia) {
+  const panel = document.getElementById('sede-' + (sede === 'p' ? 'portales' : 'coyoacan'));
+  panel.querySelectorAll('.dia-btn').forEach(b => b.classList.remove('active'));
+  panel.querySelectorAll('.dia-panel').forEach(p => p.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById(sede + '-' + dia).classList.add('active');
+}
+
+// ===== MOBILE MENU =====
+function toggleMenu() {
+  const m = document.getElementById('mobile-menu');
+  const h = document.querySelector('.hamburger');
+  m.classList.toggle('open');
+  h.classList.toggle('open');
+}
+function closeMenu() {
+  document.getElementById('mobile-menu').classList.remove('open');
+  document.querySelector('.hamburger').classList.remove('open');
+}
+</script>
+</body>
+</html>
